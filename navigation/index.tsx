@@ -18,6 +18,8 @@ import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import {useSelector} from "react-redux";
+import {useAppSelector} from "../redux/helpers";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -36,13 +38,19 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const isAuth = useAppSelector(state => state.user.isAuth);
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
+        {
+            isAuth ?
+                <Stack.Screen name="Root" component={PrivateBottomTabNavigator} options={{ headerShown: false }} /> :
+                <Stack.Screen name="Root" component={PublicBottomTabNavigator} options={{ headerShown: false }} />
+        }
+      {/*<Stack.Screen name="Root" component={PublicBottomTabNavigator} options={{ headerShown: false }} />*/}
+      {/*<Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />*/}
+      {/*<Stack.Group screenOptions={{ presentation: 'modal' }}>*/}
+      {/*  <Stack.Screen name="Modal" component={ModalScreen} />*/}
+      {/*</Stack.Group>*/}
     </Stack.Navigator>
   );
 }
@@ -53,7 +61,7 @@ function RootNavigator() {
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-function BottomTabNavigator() {
+function PublicBottomTabNavigator() {
   const colorScheme = useColorScheme();
 
   return (
@@ -63,39 +71,46 @@ function BottomTabNavigator() {
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
       <BottomTab.Screen
-        name="TabOne"
+        name="Login"
         component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        })}
+        options={{
+            title: 'Login',
+            tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+        }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Signup"
         component={TabTwoScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'SignUp',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
     </BottomTab.Navigator>
   );
 }
 
+
+function PrivateBottomTabNavigator() {
+    const colorScheme = useColorScheme();
+
+    return (
+        <BottomTab.Navigator
+            initialRouteName="ModalScreen"
+            screenOptions={{
+                tabBarActiveTintColor: Colors[colorScheme].tint,
+            }}>
+            <BottomTab.Screen
+                name="ModalScreen"
+                component={ModalScreen}
+                options={{
+                    title: 'Home',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+                }}
+            />
+        </BottomTab.Navigator>
+    )
+}
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
