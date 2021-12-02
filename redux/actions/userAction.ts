@@ -9,6 +9,8 @@ export const loginUser = (loginData: ILogin) => async (dispatch: AppDispatch) =>
         await AsyncStorage.setItem('access_token', res.data.access_token);
         dispatch(authUser())
     } catch (e) {
-        console.log(e.response.data.message);
+        console.log(e.response?.data?.message);
     }
 };
+
+

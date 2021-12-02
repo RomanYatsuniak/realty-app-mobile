@@ -20,6 +20,12 @@ import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../typ
 import LinkingConfiguration from './LinkingConfiguration';
 import {useSelector} from "react-redux";
 import {useAppSelector} from "../redux/helpers";
+import RealtyOffersScreen from "../screens/RealtyOffersScreen";
+import CreatePublicationScreen from "../screens/CreatePublicationScreen";
+import PublicationRentInfoScreen from "../screens/PublicationRentInfoScreen";
+import PublicationSellInfoScreen from "../screens/PublicationSellInfoScreen";
+import ListScreen from "../screens/ListScreen";
+import UserInfoScreen from "../screens/UserInfoScreen";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -43,7 +49,14 @@ function RootNavigator() {
     <Stack.Navigator>
         {
             isAuth ?
-                <Stack.Screen name="Root" component={PrivateBottomTabNavigator} options={{ headerShown: false }} /> :
+                <>
+                    <Stack.Screen name="Root" component={PrivateBottomTabNavigator} options={{ headerShown: false }} />
+                    <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                        <Stack.Screen name="PublicationRentInfoScreen" options={{ title: '' }}  component={PublicationRentInfoScreen} />
+                        <Stack.Screen name="PublicationSellInfoScreen" options={{ title: '' }} component={PublicationSellInfoScreen} />
+                    </Stack.Group>
+                </>
+                 :
                 <Stack.Screen name="Root" component={PublicBottomTabNavigator} options={{ headerShown: false }} />
         }
       {/*<Stack.Screen name="Root" component={PublicBottomTabNavigator} options={{ headerShown: false }} />*/}
@@ -101,13 +114,40 @@ function PrivateBottomTabNavigator() {
                 tabBarActiveTintColor: Colors[colorScheme].tint,
             }}>
             <BottomTab.Screen
-                name="ModalScreen"
-                component={ModalScreen}
+                name="HistoryScreen"
+                component={ListScreen}
                 options={{
-                    title: 'Home',
+                    title: 'List',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+                }}
+            />
+            <BottomTab.Screen
+                name="RealtyOffersScreen"
+                component={RealtyOffersScreen}
+                options={{
+                    title: 'Realty',
                     tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
                 }}
             />
+            <BottomTab.Screen
+                name="CreatePublicationScreen"
+                component={CreatePublicationScreen}
+                options={{
+                    title: 'Create Publication',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+                }}
+            />
+            <BottomTab.Screen
+                name="UserInfoScreen"
+                component={UserInfoScreen}
+                options={{
+                    title: 'User',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+                }}
+            />
+            {/*<Stack.Screen name="PublicationRentInfoScreen" component={PublicationRentInfoScreen} options={{*/}
+            {/*    tabBarVisible: false,*/}
+            {/*}} />*/}
         </BottomTab.Navigator>
     )
 }
