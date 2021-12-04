@@ -1,10 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    // rentPublications: [],
-    // sellPublications: [],
+    modalIsShown: false,
+    modalData: '',
     publications: [],
     isLoading: false,
+    publication: null,
     error: '',
 };
 
@@ -14,11 +15,25 @@ const mainSlice = createSlice({
     reducers: {
         setRentRealties(state, payload) {
             state.publications = payload;
-            console.log(payload);
+            // console.log(payload);
         },
         setSellRealties(state, payload) {
             state.publications = payload;
-            console.log(payload);
+            // console.log(payload);
+        },
+        setPublication(state, payload) {
+            state.publication = payload;
+        },
+        showModal(state, payload) {
+            state.modalIsShown = true;
+            state.modalData = payload.payload;
+        },
+        showErrorModal(state) {
+            state.modalIsShown = true;
+            state.modalData = 'Error';
+        },
+        hideModal(state) {
+            state.modalIsShown = false;
         }
         // authUser(state) {
         //     state.isAuth = true
@@ -26,6 +41,6 @@ const mainSlice = createSlice({
     },
 });
 
-export const {setRentRealties, setSellRealties} = mainSlice.actions;
+export const {setRentRealties, setSellRealties, setPublication, hideModal, showModal, showErrorModal} = mainSlice.actions;
 
 export default mainSlice.reducer;

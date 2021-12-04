@@ -26,6 +26,9 @@ import PublicationRentInfoScreen from "../screens/PublicationRentInfoScreen";
 import PublicationSellInfoScreen from "../screens/PublicationSellInfoScreen";
 import ListScreen from "../screens/ListScreen";
 import UserInfoScreen from "../screens/UserInfoScreen";
+import RentScreen from "../screens/RentScreen";
+import BuyScreen from "../screens/BuyScreen";
+import OwnerInfoScreen from "../screens/OwnerInfoScreen";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -54,6 +57,9 @@ function RootNavigator() {
                     <Stack.Group screenOptions={{ presentation: 'modal' }}>
                         <Stack.Screen name="PublicationRentInfoScreen" options={{ title: '' }}  component={PublicationRentInfoScreen} />
                         <Stack.Screen name="PublicationSellInfoScreen" options={{ title: '' }} component={PublicationSellInfoScreen} />
+                        <Stack.Screen name="BuyScreen" options={{ title: '' }} component={BuyScreen} />
+                        <Stack.Screen name="RentScreen" options={{ title: '' }} component={RentScreen} />
+                        <Stack.Screen name="OwnerInfoScreen" options={{ title: '' }} component={OwnerInfoScreen} />
                     </Stack.Group>
                 </>
                  :

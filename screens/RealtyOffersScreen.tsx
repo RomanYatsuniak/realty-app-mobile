@@ -22,18 +22,18 @@ export default function RealtyOffersScreen({navigation}) {
     }, []);
     const [typeOfPublication, setTypeOfPublication] = useState<string>('Sell Publications');
 
-    const onPublicationPress = (id) => {
+    const onPublicationPress = (id, type) => {
         // if (typeOfPublication.includes('Sell')) {
         //
         // } else {
         //     navigation.navigate('PublicationRentInfoScreen', {id})
         // }
-        navigation.navigate('PublicationSellInfoScreen', {id})
+        navigation.navigate('PublicationSellInfoScreen', {id, type})
 
     }
     const renderItem = ({item}) => {
         return (
-            <Card mode="outlined" style={{marginTop: 20}} onPress={() => onPublicationPress(item.publicationId)}>
+            <Card mode="outlined" style={{marginTop: 20}} onPress={() => onPublicationPress(item.publicationId, item.publicationType)}>
                 <Card.Title title={item.publicationTitle} titleStyle={{fontSize: 30}}/>
                 <Card.Content>
                     <Title>Description</Title>

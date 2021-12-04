@@ -7,6 +7,8 @@ import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import {setupStore} from "./redux/store";
 import {Provider} from 'react-redux';
+import DefaultModal from "./components/DefaultModal";
+import {Provider as PaperProvider} from 'react-native-paper'
 const store = setupStore();
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -18,8 +20,11 @@ export default function App() {
     return (
       <Provider store={store}>
         <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
-          <StatusBar />
+          <PaperProvider>
+            <DefaultModal/>
+            <Navigation colorScheme={colorScheme} />
+            <StatusBar />
+          </PaperProvider>
         </SafeAreaProvider>
       </Provider>
     );
