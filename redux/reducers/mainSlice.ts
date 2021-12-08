@@ -2,11 +2,14 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
     modalIsShown: false,
+    ownerInfo: null,
     modalData: '',
     publications: [],
     isLoading: false,
     publication: null,
     error: '',
+    userNotes: null,
+    listOfActiveReservations: null,
 };
 
 const mainSlice = createSlice({
@@ -34,6 +37,19 @@ const mainSlice = createSlice({
         },
         hideModal(state) {
             state.modalIsShown = false;
+        },
+        setOwnerInfo(state, payload) {
+            state.ownerInfo = payload.payload[0];
+        },
+        setUserNotes(state, payload) {
+            state.userNotes = payload.payload;
+        },
+        removeUserNotes(state, payload) {
+            const notes = state.userNotes.filter(n => n.publication.publicationId !== payload.payload);
+            state.userNotes = notes;
+        },
+        setUserActiveReservations(state, payload) {
+            state.listOfActiveReservations = payload.payload;
         }
         // authUser(state) {
         //     state.isAuth = true
@@ -41,6 +57,6 @@ const mainSlice = createSlice({
     },
 });
 
-export const {setRentRealties, setSellRealties, setPublication, hideModal, showModal, showErrorModal} = mainSlice.actions;
+export const {setUserActiveReservations, setUserNotes, removeUserNotes, setRentRealties, setSellRealties, setPublication, hideModal, showModal, showErrorModal, setOwnerInfo} = mainSlice.actions;
 
 export default mainSlice.reducer;

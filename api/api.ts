@@ -36,3 +36,57 @@ export const getPublicationById = async (id) => {
     };
     return await axios.get(`/publication/${id}`, config);
 }
+
+export const getOwnerInfo = async (id) => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${TOKEN}` }
+    };
+    const a = await axios.get(`/user/${id}`, config);
+    return a;
+}
+
+export const addToNotes = async (id) => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${TOKEN}` }
+    };
+    console.log(id);
+    // const a = await fetch('https://realty-app-api.herokuapp.com/user/notes/58', {
+    //     method: 'POST',
+    //     headers: { Authorization: `Bearer ${TOKEN}` }
+    // })
+    return await axios.post(`/user/notes/${id}`, {}, {
+        headers: { Authorization: `Bearer ${TOKEN}` }
+    });
+}
+
+export const getUserNotes = async () => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${TOKEN}` }
+    };
+    // const a = await fetch('https://realty-app-api.herokuapp.com/user/notes/58', {
+    //     method: 'POST',
+    //     headers: { Authorization: `Bearer ${TOKEN}` }
+    // })
+    return await axios.get(`/user/notes`, config);
+}
+
+export const deleteNote = async (id) => {
+    const token = await AsyncStorage.getItem('access_token');
+    console.log(id);
+    const config = {
+        headers: { Authorization: `Bearer ${TOKEN}` }
+    };
+    return await axios.delete(`/user/notes/${id}`, config);
+
+}
+
+export const getUserActiveReservations = async () => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${TOKEN}` }
+    };
+    return await axios.get(`/realty/reserve/client`, config);
+}

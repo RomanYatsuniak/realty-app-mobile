@@ -4,7 +4,7 @@ import {tintColorLight} from './../constants/Colors';
 const DefaultBtn = (props) => {
     return (
         <TouchableOpacity style={[styles.btn, props.style]} onPress={props.onPress}>
-            <Text style={styles.text}>{props.title || 'Next'}</Text>
+            <Text style={[styles.text, props.color]}>{props.title || 'Next'}</Text>
         </TouchableOpacity>
     )
 }

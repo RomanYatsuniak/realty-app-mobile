@@ -29,6 +29,7 @@ import UserInfoScreen from "../screens/UserInfoScreen";
 import RentScreen from "../screens/RentScreen";
 import BuyScreen from "../screens/BuyScreen";
 import OwnerInfoScreen from "../screens/OwnerInfoScreen";
+import MyNotesScreen from "../screens/MyNotesScreen";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -123,8 +124,16 @@ function PrivateBottomTabNavigator() {
                 name="HistoryScreen"
                 component={ListScreen}
                 options={{
-                    title: 'List',
+                    title: 'Reservations',
                     tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
+                }}
+            />
+            <BottomTab.Screen
+                name="MyNotesScreen"
+                component={MyNotesScreen}
+                options={{
+                    title: 'Favourites',
+                    tabBarIcon: ({ color }) => <TabBarIcon name="heart" color={color} />,
                 }}
             />
             <BottomTab.Screen

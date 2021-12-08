@@ -5,10 +5,10 @@ import { Platform, StyleSheet } from 'react-native';
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 
-export default function BuyScreen() {
+export default function BuyScreen({route}) {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Buy</Text>
+            <Text style={styles.title}>Buy {route.params.realtyId}</Text>
         </View>
     );
 }

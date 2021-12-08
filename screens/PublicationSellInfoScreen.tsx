@@ -9,7 +9,7 @@ import {Avatar, Card, Paragraph, Title} from "react-native-paper";
 import Swiper from 'react-native-swiper';
 import Button from "../components/Button";
 import {useEffect, useState} from "react";
-import {getPublicationById} from "../api/api";
+import {addToNotes, getPublicationById} from "../api/api";
 import {getPublicationInfo} from "../redux/actions/mainActions";
 import {showErrorModal, showModal} from "../redux/reducers/mainSlice";
 export default function PublicationSellInfoScreen({navigation, route}) {
@@ -25,14 +25,21 @@ export default function PublicationSellInfoScreen({navigation, route}) {
         // dispatch(showModal('test'));
         switch (route.params.type) {
             case 'rent':
-                navigation.navigate('RentScreen');
+                navigation.navigate('RentScreen', {realtyId: publication.realty.realtyId});
                 break;
             case 'sale':
-                navigation.navigate('BuyScreen');
+                navigation.navigate('BuyScreen', {realtyId: publication.realty.realtyId});
         }
     }
     const userInfoPress = () => {
-        navigation.navigate('OwnerInfoScreen');
+        navigation.navigate('OwnerInfoScreen', {userId: publication.publicant.id});
+    }
+    const addToNotesPress = async () => {
+        try {
+        await addToNotes(route.params.id)
+        } catch (e) {
+            console.log(e);
+        }
     }
     return (
         <>
@@ -52,7 +59,12 @@ export default function PublicationSellInfoScreen({navigation, route}) {
                                     {/*<Image source={publication[0].realty.} style={{ width: 305, height: 159 }} />*/}
                                 </Swiper>
                             </View>
-                            <Button style={styles.button} title={route.params.type === 'sale' ? 'Buy' : 'Rent'} onPress={() => buttonPressHandler()}/>
+                            {route.params.reservation ||
+                            <>
+                                <Button style={styles.button} title={route.params.type === 'sale' ? 'Buy' : 'Rent'} onPress={() => buttonPressHandler()}/>
+                                {!route.params.noteCheck && <Button color={{color: '#6200ee'}} style={styles.notesButton} title={'Add To Favourites'} onPress={() => addToNotesPress()}/>}
+                            </>}
+
                             <Text style={styles.date}>Publication created at
                                 - {new Date(publication.createdAt).toLocaleDateString('pt-PT')}</Text>
                             <Text style={styles.title}>{publication.publicationTitle}</Text>
@@ -127,6 +139,13 @@ const styles = StyleSheet.create({
     button: {
         marginVertical: 10,
         marginHorizontal: 10
+    },
+    notesButton: {
+      backgroundColor: 'white',
+      marginVertical: 10,
+      marginHorizontal: 10,
+      borderColor: '#6200ee',
+      borderWidth: 1,
     },
     noData: {
         marginTop: 20,
