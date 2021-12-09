@@ -50,6 +50,11 @@ const mainSlice = createSlice({
         },
         setUserActiveReservations(state, payload) {
             state.listOfActiveReservations = payload.payload;
+        },
+        removeUserReservation(state, action) {
+            console.log(action.payload);
+            const reservations = state.listOfActiveReservations.filter(r => r.rentId !== action.payload);
+            state.listOfActiveReservations = reservations;
         }
         // authUser(state) {
         //     state.isAuth = true
@@ -57,6 +62,6 @@ const mainSlice = createSlice({
     },
 });
 
-export const {setUserActiveReservations, setUserNotes, removeUserNotes, setRentRealties, setSellRealties, setPublication, hideModal, showModal, showErrorModal, setOwnerInfo} = mainSlice.actions;
+export const {removeUserReservation, setUserActiveReservations, setUserNotes, removeUserNotes, setRentRealties, setSellRealties, setPublication, hideModal, showModal, showErrorModal, setOwnerInfo} = mainSlice.actions;
 
 export default mainSlice.reducer;

@@ -30,6 +30,11 @@ import RentScreen from "../screens/RentScreen";
 import BuyScreen from "../screens/BuyScreen";
 import OwnerInfoScreen from "../screens/OwnerInfoScreen";
 import MyNotesScreen from "../screens/MyNotesScreen";
+import UserPurchasesScreen from "../screens/UserPurchasesScreen";
+import HistoryOfReservationsScreen from "../screens/HistoryOfReservationsScreen";
+import HistoryOfPurchasesScreen from "../screens/HistoryOfPurchasesScreen";
+import CreateUserReviewScreen from "../screens/CreateUserReviewScreen";
+import CreatePublicationReviewScreen from "../screens/CreatePublicationReviewScreen";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -61,6 +66,11 @@ function RootNavigator() {
                         <Stack.Screen name="BuyScreen" options={{ title: '' }} component={BuyScreen} />
                         <Stack.Screen name="RentScreen" options={{ title: '' }} component={RentScreen} />
                         <Stack.Screen name="OwnerInfoScreen" options={{ title: '' }} component={OwnerInfoScreen} />
+                        <Stack.Screen name="UserPurchasesScreen" options={{ title: '' }} component={UserPurchasesScreen} />
+                        <Stack.Screen name="HistoryOfReservationsScreen" options={{ title: '' }} component={HistoryOfReservationsScreen} />
+                        <Stack.Screen name="HistoryOfPurchasesScreen" options={{ title: '' }} component={HistoryOfPurchasesScreen} />
+                        <Stack.Screen name="CreatePublicationReviewScreen" options={{ title: '' }} component={CreatePublicationReviewScreen} />
+                        <Stack.Screen name="CreateUserReviewScreen" options={{ title: '' }} component={CreateUserReviewScreen} />
                     </Stack.Group>
                 </>
                  :

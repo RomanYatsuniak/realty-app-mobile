@@ -10,10 +10,18 @@ import {useAppDispatch, useAppSelector} from "../redux/helpers";
 import {Card, Paragraph, Title} from "react-native-paper";
 import emptyPublication from './../assets/images/empty-publication-image.jpg';
 import Button from "../components/Button";
+import {useIsFocused} from "@react-navigation/core";
 
 export default function RealtyOffersScreen({navigation}) {
     const dispatch = useAppDispatch();
     const {payload: publications} = useAppSelector(state => state.main.publications);
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        if (isFocused) {
+            console.log('ggggg')
+            dispatch(getRealtiesForSale());
+        }
+    },[isFocused]);
     useEffect(() => {
         // (async function getRentRealties () {
         //

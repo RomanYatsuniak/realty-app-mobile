@@ -9,7 +9,7 @@ import {Avatar, Card, Paragraph, Title} from "react-native-paper";
 import Swiper from 'react-native-swiper';
 import Button from "../components/Button";
 import {useEffect, useState} from "react";
-import {addToNotes, getPublicationById} from "../api/api";
+import {addToNotes, buyRealty, getPublicationById} from "../api/api";
 import {getPublicationInfo} from "../redux/actions/mainActions";
 import {showErrorModal, showModal} from "../redux/reducers/mainSlice";
 export default function PublicationSellInfoScreen({navigation, route}) {
@@ -21,18 +21,23 @@ export default function PublicationSellInfoScreen({navigation, route}) {
         })()
     }, []);
     const publication = data?.payload;
+    const buy = async () => {
+        await buyRealty(publication.realty.realtyId)
+        navigation.navigate('RealtyOffersScreen');
+    }
     const buttonPressHandler = () => {
         // dispatch(showModal('test'));
         switch (route.params.type) {
             case 'rent':
+                console.log('fff')
                 navigation.navigate('RentScreen', {realtyId: publication.realty.realtyId});
                 break;
             case 'sale':
-                navigation.navigate('BuyScreen', {realtyId: publication.realty.realtyId});
+                buy();
         }
     }
     const userInfoPress = () => {
-        navigation.navigate('OwnerInfoScreen', {userId: publication.publicant.id});
+        navigation.navigate('OwnerInfoScreen', {userId: publication.publicant.id, userReview: route.params.reservationHistory || false});
     }
     const addToNotesPress = async () => {
         try {
@@ -40,6 +45,9 @@ export default function PublicationSellInfoScreen({navigation, route}) {
         } catch (e) {
             console.log(e);
         }
+    }
+    const leaveReview = async () => {
+        navigation.navigate('CreatePublicationReviewScreen', {id: route.params.id});
     }
     return (
         <>
@@ -64,6 +72,7 @@ export default function PublicationSellInfoScreen({navigation, route}) {
                                 <Button style={styles.button} title={route.params.type === 'sale' ? 'Buy' : 'Rent'} onPress={() => buttonPressHandler()}/>
                                 {!route.params.noteCheck && <Button color={{color: '#6200ee'}} style={styles.notesButton} title={'Add To Favourites'} onPress={() => addToNotesPress()}/>}
                             </>}
+                            {route.params.reservationHistory && <Button style={styles.button} title={'Leave Review'} onPress={() => leaveReview()}/>}
 
                             <Text style={styles.date}>Publication created at
                                 - {new Date(publication.createdAt).toLocaleDateString('pt-PT')}</Text>

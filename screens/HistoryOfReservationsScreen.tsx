@@ -4,49 +4,31 @@ import {Platform, ScrollView, StyleSheet} from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
-import {useAppDispatch, useAppSelector} from "../redux/helpers";
-import {useEffect} from "react";
-import {getActiveReservations, getNotes, getUserActiveReservations} from "../redux/actions/mainActions";
-import {Card, Paragraph, Title} from "react-native-paper";
+import {useEffect, useState} from "react";
+import {getMyInfo, getUserHistoryOfReservations} from "../api/api";
+import {Avatar, Card, Paragraph, Title} from "react-native-paper";
 import Button from "../components/Button";
-import {removeReservation} from "../api/api";
-import {removeUserReservation} from "../redux/reducers/mainSlice";
-import {useIsFocused} from "@react-navigation/core";
 
-export default function ListScreen({navigation}) {
-    const dispatch = useAppDispatch();
-    const isFocused = useIsFocused();
+export default function HistoryOfReservationsScreen({navigation}) {
+    const [reservationHistory, setReservationHistory] = useState(null);
     useEffect(() => {
-        if (isFocused) {
-            dispatch(getActiveReservations());
-        }
-    },[isFocused]);
-    const reservations = useAppSelector(state => state.main.listOfActiveReservations);
-    useEffect(() => {
-        dispatch(getActiveReservations());
+        (async function getInfo() {
+            const reservations = await getUserHistoryOfReservations();
+            setReservationHistory(reservations.data);
+        })()
     }, []);
-
     const onPublicationPress = (id, type) => {
-        navigation.navigate('PublicationSellInfoScreen', {id, type, reservation: true})
+        navigation.navigate('PublicationSellInfoScreen', {id, type, reservationHistory: true, reservation: true})
     }
-    const cancelReservation = async (reservationId) => {
-        try {
-            await removeReservation(reservationId);
-            dispatch(removeUserReservation(reservationId));
-        } catch (e) {
-            console.log(e);
-        }
-        console.log(reservationId);
-    }
-    // console.log(navigation.navigate('RealtyOffersScreen'));
     return (
-        <ScrollView>
+
             <View style={styles.container}>
-                {reservations && reservations.length > 0 ?
+                <ScrollView>
+                {reservationHistory && reservationHistory.length > 0?
                     <View>
-                        {reservations.map(reservation => {
+                        {reservationHistory.map(reservation => {
                             return (
-                                <Card mode="outlined" key={reservation.rentId} style={{marginTop: 20}} onPress={() => onPublicationPress(reservation.realty.publication.publicationId, reservation.realty.publication.publicationType)}>
+                                <Card mode="outlined" key={reservation.rentId} style={{marginBottom: 20}} onPress={() => onPublicationPress(reservation.realty.publication.publicationId, reservation.realty.publication.publicationType)}>
                                     {/*<Card.Title title={reservation.publication.publicationTitle} titleStyle={{fontSize: 30}}/>*/}
                                     <Card.Content>
                                         <Title>Reservation Info</Title>
@@ -54,7 +36,6 @@ export default function ListScreen({navigation}) {
                                         <Paragraph>Person count - {reservation.personCount}</Paragraph>
                                         <Paragraph>Days count - {reservation.daysCount}</Paragraph>
                                         <Paragraph>Total price for reservation - {reservation.rentPrice}</Paragraph>
-                                        <Button style={{marginTop: 20, backgroundColor: 'red'}} onPress={() => cancelReservation(reservation.rentId)} title="Cancel Reservation"/>
                                         {/*<Paragraph>Price - {item.publication.price}{item.publication.publicationType.includes('Rent') ? '$ / day' : '$'}</Paragraph>*/}
                                     </Card.Content>
                                     {/*{item?.publication?.realty?.images[0]?.imageUrl ? <Card.Cover source={{ uri: item?.publication?.realty?.images[0]?.imageUrl  }} /> : <Text>{''}</Text>}*/}
@@ -62,19 +43,23 @@ export default function ListScreen({navigation}) {
                                 </Card>
                             )
                         })}
-                        {/*<Text>{JSON.stringify(reservations)}</Text>*/}
                     </View> : <Text>No Reservations</Text>}
+                </ScrollView>
             </View>
-        </ScrollView>
+
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 10,
         // alignItems: 'center',
         // justifyContent: 'center',
+        paddingHorizontal: 28,
+        paddingTop: 20,
+    },
+    button: {
+        marginBottom: 10,
     },
     title: {
         fontSize: 20,

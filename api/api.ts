@@ -1,6 +1,6 @@
 import axios from './configuration';
 // import axios from "axios";
-const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJ5YXRzdW5pYWtAZ21haWwuY29tIiwic3ViIjo0NiwiaWF0IjoxNjM4NjQ0NDk2LCJleHAiOjE2NTA2NDQ0OTZ9.IHkfrRTcN_jiKcWO-PEz93XrOxMJxIj6-51tVRExu6Q"
+// const TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJ5YXRzdW5pYWtAZ21haWwuY29tIiwic3ViIjo0NiwiaWF0IjoxNjM5MDg5MzkzLCJleHAiOjE2NTEwODkzOTN9.vy56mW9NBPOKiqsHS52Iz46wMcPSXK94adZ3DfyLDYs"
 import {ILogin} from "../shared/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const login = async (loginData: ILogin) => {
@@ -16,7 +16,7 @@ export const register = async (data: any) => {
 export const getSellPublications = async () => {
     const token = await AsyncStorage.getItem('access_token');
     const config = {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     };
     return await axios.get('publication/find/sell', config);
 }
@@ -24,7 +24,7 @@ export const getSellPublications = async () => {
 export const getRentPublications = async () => {
     const token = await AsyncStorage.getItem('access_token');
     const config = {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     };
     return await axios.get('publication/find/rent', config);
 }
@@ -32,7 +32,7 @@ export const getRentPublications = async () => {
 export const getPublicationById = async (id) => {
     const token = await AsyncStorage.getItem('access_token');
     const config = {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     };
     return await axios.get(`/publication/${id}`, config);
 }
@@ -40,7 +40,7 @@ export const getPublicationById = async (id) => {
 export const getOwnerInfo = async (id) => {
     const token = await AsyncStorage.getItem('access_token');
     const config = {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     };
     const a = await axios.get(`/user/${id}`, config);
     return a;
@@ -49,7 +49,7 @@ export const getOwnerInfo = async (id) => {
 export const addToNotes = async (id) => {
     const token = await AsyncStorage.getItem('access_token');
     const config = {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     };
     console.log(id);
     // const a = await fetch('https://realty-app-api.herokuapp.com/user/notes/58', {
@@ -57,14 +57,14 @@ export const addToNotes = async (id) => {
     //     headers: { Authorization: `Bearer ${TOKEN}` }
     // })
     return await axios.post(`/user/notes/${id}`, {}, {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     });
 }
 
 export const getUserNotes = async () => {
     const token = await AsyncStorage.getItem('access_token');
     const config = {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     };
     // const a = await fetch('https://realty-app-api.herokuapp.com/user/notes/58', {
     //     method: 'POST',
@@ -77,7 +77,7 @@ export const deleteNote = async (id) => {
     const token = await AsyncStorage.getItem('access_token');
     console.log(id);
     const config = {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     };
     return await axios.delete(`/user/notes/${id}`, config);
 
@@ -86,7 +86,90 @@ export const deleteNote = async (id) => {
 export const getUserActiveReservations = async () => {
     const token = await AsyncStorage.getItem('access_token');
     const config = {
-        headers: { Authorization: `Bearer ${TOKEN}` }
+        headers: { Authorization: `Bearer ${token}` }
     };
     return await axios.get(`/realty/reserve/client`, config);
 }
+
+export const removeReservation = async (id) => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.delete(`/realty/reserve/${id}`, config);
+
+}
+
+export const createPublication = async (data: any) => {
+    const token = await AsyncStorage.getItem('access_token');
+    return await axios.post('/publication', data, {
+        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
+    });
+}
+
+export const reserveRealty = async (data, id) => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.post(`/realty/reserve/${id}`, data, config);
+}
+
+export const buyRealty = async (id) => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.post(`/realty/buy/${id}`, {}, config);
+}
+
+export const getMyInfo = async () => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.get(`/user/userInfo`, config);
+}
+
+export const getUserPurchases = async () => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.get(`/realty/buy/client/history`, config);
+}
+
+export const getUserSellings = async () => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.get(`/realty/buy/owner/history`, config);
+}
+
+export const getUserHistoryOfReservations = async () => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.get(`/realty/reserve/client/history`, config);
+}
+
+export const leaveUserReview = async (data) => {
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.post(`/user/createReview`, data, config);
+}
+
+export const leavePublicationReview = async (id, data) => {
+    console.log(data);
+    const token = await AsyncStorage.getItem('access_token');
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
+    return await axios.post(`/publication/${id}/review`, data, config);
+}
+
+

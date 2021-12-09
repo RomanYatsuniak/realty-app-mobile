@@ -10,14 +10,21 @@ import {setOwnerInfo} from "../redux/reducers/mainSlice";
 import {getOwnerInfo} from "../api/api";
 import {getOwner} from "../redux/actions/mainActions";
 import {Avatar, Card, Paragraph, Title} from "react-native-paper";
+import Button from "../components/Button";
 
-export default function OwnerInfoScreen({route}) {
+export default function OwnerInfoScreen({route, navigation}) {
     const user = useAppSelector(state => state.main.ownerInfo);
     // const user = data?.payload;
     const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch(getOwner(route.params.userId));
     }, []);
+    const leaveReviewToUser = () => {
+        console.log(route.params.userId);
+        console.log()
+        navigation.navigate('CreateUserReviewScreen', {id: route.params.userId});
+    }
+
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -30,12 +37,14 @@ export default function OwnerInfoScreen({route}) {
                         <Text style={styles.text}>Phone - +{user.phoneNumber}</Text>
                         <Text style={{fontSize: 20, fontWeight: 'bold'}}>My Description</Text>
                         <Text>{user.description}</Text>
+                        {route.params.userReview && <Button style={{marginTop: 20}} title={"Leave Review"} onPress={leaveReviewToUser}/>}
                         <Text style={[styles.text, {textAlign: 'center', marginTop: 20, fontWeight: 'bold'}]}>User Reviews</Text>
                         {user.writtenReview ? user.writtenReview.map((review) => {
+                            console.log(review.writtenBy.avatarUrl);
                             return (
                                 <Card mode="outlined" key={review.id} style={{marginTop: 20}}>
                                     <Card.Content>
-                                        <Avatar.Image size={60} source={{uri: `${review.avatarUrl || 'https://avios.pl/wp-content/uploads/2018/01/no-avatar.png'}`}} />
+                                        <Avatar.Image size={60} source={{uri: `${review.writtenBy.avatarUrl || 'https://avios.pl/wp-content/uploads/2018/01/no-avatar.png'}`}} />
                                         <Title>Rating - {review.rating}</Title>
                                         <Paragraph>{review.description}</Paragraph>
                                         <Text>{new Date(review.createdAt).toLocaleDateString('pt-PT')}</Text>
