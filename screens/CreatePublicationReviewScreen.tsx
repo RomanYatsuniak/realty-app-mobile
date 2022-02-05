@@ -9,18 +9,27 @@ import {getMyInfo, getUserSellings, leavePublicationReview, leaveUserReview} fro
 import {Avatar, TextInput} from "react-native-paper";
 import Button from "../components/Button";
 import DropDown from "react-native-paper-dropdown";
+import {showModal} from "../redux/reducers/mainSlice";
+import {useAppDispatch} from "../redux/helpers";
 
 export default function CreatePublicationReviewScreen({navigation, route}) {
     const [rating, setRating] = useState('');
     const [review, setReview] = useState('');
     const [showDropDown, setShowDropDown] = useState(false);
+    const dispatch = useAppDispatch();
     const leaveReview = async () => {
         try {
             const res = await leavePublicationReview(route.params.id, {reviewText: review, rating});
             console.log(res.data)
             navigation.navigate('RealtyOffersScreen');
         } catch (e) {
-            console.log(e)
+            if (e.response?.data?.message) {
+                dispatch(showModal(e.response?.data?.message))
+            } else {
+                dispatch(showModal('Something went wrong'))
+            }
+
+            console.log(e.response?.data?.message);
         }
 
     }

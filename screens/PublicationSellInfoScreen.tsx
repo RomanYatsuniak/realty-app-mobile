@@ -43,7 +43,13 @@ export default function PublicationSellInfoScreen({navigation, route}) {
         try {
         await addToNotes(route.params.id)
         } catch (e) {
-            console.log(e);
+            if (e.response?.data?.message) {
+                dispatch(showModal(e.response?.data?.message))
+            } else {
+                dispatch(showModal('Something went wrong'))
+            }
+
+            console.log(e.response?.data?.message);
         }
     }
     const leaveReview = async () => {
@@ -69,7 +75,7 @@ export default function PublicationSellInfoScreen({navigation, route}) {
                             </View>
                             {route.params.reservation ||
                             <>
-                                <Button style={styles.button} title={route.params.type === 'sale' ? 'Buy' : 'Rent'} onPress={() => buttonPressHandler()}/>
+                            {route.params.noActions || <Button style={styles.button} title={route.params.type === 'sale' ? 'Buy' : 'Rent'} onPress={() => buttonPressHandler()}/>}
                                 {!route.params.noteCheck && <Button color={{color: '#6200ee'}} style={styles.notesButton} title={'Add To Favourites'} onPress={() => addToNotesPress()}/>}
                             </>}
                             {route.params.reservationHistory && <Button style={styles.button} title={'Leave Review'} onPress={() => leaveReview()}/>}

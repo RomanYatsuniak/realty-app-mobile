@@ -9,6 +9,7 @@ import {setupStore} from "./redux/store";
 import {Provider} from 'react-redux';
 import DefaultModal from "./components/DefaultModal";
 import {Provider as PaperProvider} from 'react-native-paper'
+import FilterModal from "./components/FilterModal";
 const store = setupStore();
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -22,6 +23,7 @@ export default function App() {
         <SafeAreaProvider>
           <PaperProvider>
             <DefaultModal/>
+            <FilterModal/>
             <Navigation colorScheme={colorScheme} />
             <StatusBar />
           </PaperProvider>

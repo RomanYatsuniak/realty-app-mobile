@@ -8,29 +8,58 @@ import {useEffect, useState} from "react";
 import {getMyInfo, getUserPurchases} from "../api/api";
 import {Avatar, Card, Paragraph, Title} from "react-native-paper";
 import Button from "../components/Button";
+import {showModal} from "../redux/reducers/mainSlice";
+import {useAppDispatch} from "../redux/helpers";
 
 export default function UserPurchasesScreen({navigation}) {
     const [purchases, setPurchases] = useState(null);
+    const dispatch = useAppDispatch();
     useEffect(() => {
         (async function getInfo() {
-            const purchases = await getUserPurchases()
-            setPurchases(purchases.data);
+            try {
+                const purchases = await getUserPurchases()
+                setPurchases(purchases.data);
+            } catch (e) {
+                if (e.response?.data?.message) {
+                    dispatch(showModal(e.response?.data?.message))
+                } else {
+                    dispatch(showModal('Something went wrong'))
+                }
+
+                console.log(e.response?.data?.message);
+            }
+
         })()
     }, []);
+    const getPublicationInfo = (id) => {
+        navigation.navigate('PublicationSellInfoScreen', {id, type: 'sale', noActions: true, noteCheck: true, reservationHistory: true})
+    }
 
+
+
+    const checkInfoFromOwner = (saleId) => {
+
+        navigation.navigate('GetInfoFromOwnerScreen', {id: saleId});
+    }
+
+    const giveInfoToOwner = (saleId) => {
+        navigation.navigate('GiveInfoToOwnerScreen', {id: saleId});
+    }
     const renderItem = ({item}) => {
-        console.log(item.realty.publication);
-        if (item.realty.publication) {
+        console.log(item.realty.publication.publicationId)
+        if (item) {
             return (
-                <Card mode="outlined" style={{marginTop: 20}} onPress={() => onPublicationPress(item.publication.publicationId, item.publication.publicationType)}>
+                <Card mode="outlined" style={{marginTop: 20}} onPress={() => getPublicationInfo(item.realty.publication.publicationId)}>
                     <Card.Content>
                         <Card.Title title={item.realty.publication.publicationTitle} titleStyle={{fontSize: 30}}/>
                         <Card.Content>
-                            <Title>Description</Title>
-                            <Paragraph>{item.realty.publication.description}</Paragraph>
-                            <Paragraph>Price - {item.realty.publication.price}{item.realty.publication.publicationType.includes('Rent') ? '$ / day' : '$'}</Paragraph>
+                            <Title>{item.realty.publication.description}</Title>
+                            <Paragraph>{new Date(item.realty.publication.createdAt).toLocaleDateString('pt-PT')}</Paragraph>
+                            <Paragraph>{item.realty.publication.price}$</Paragraph>
+                            <Button style={{marginTop: 20, backgroundColor: 'green'}} onPress={() => checkInfoFromOwner(item.saleId)} title="Additional info from owner"/>
+                            <Button style={{marginTop: 20, backgroundColor: 'orange'}} onPress={() => giveInfoToOwner(item.saleId)} title="Give info to owner"/>
                         </Card.Content>
-                        {item?.realty?.images[0]?.imageUrl ? <Card.Cover source={{ uri: item?.realty?.images[0]?.imageUrl  }} /> : <Text>{''}</Text>}
+                        {/*{item?.realty?.images[0]?.imageUrl ? <Card.Cover source={{ uri: item?.realty?.images[0]?.imageUrl  }} /> : <Text>{''}</Text>}*/}
                     </Card.Content>
                 </Card>
             )

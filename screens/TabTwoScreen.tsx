@@ -9,6 +9,8 @@ import {TextInput} from "react-native-paper";
 import { Button as PaperBtn } from 'react-native-paper';
 import {tintColorLight} from "../constants/Colors";
 import {register} from "../api/api";
+import {showModal} from "../redux/reducers/mainSlice";
+import {useDispatch} from "react-redux";
 export default function TabTwoScreen(props) {
   const [image, setImage] = useState(null);
   const [name, setName] = useState<string>('');
@@ -17,6 +19,7 @@ export default function TabTwoScreen(props) {
   const [description, setDescription] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const dispatch = useDispatch();
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -69,7 +72,13 @@ export default function TabTwoScreen(props) {
         props.navigation.navigate('Login')
       }
     } catch (e) {
-      console.log(e.response.data.message);
+      if (e.response?.data?.message) {
+        dispatch(showModal(e.response?.data?.message))
+      } else {
+        dispatch(showModal('Something went wrong'))
+      }
+
+      console.log(e.response?.data?.message);
     }
   }
 

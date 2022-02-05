@@ -5,6 +5,8 @@ import { Text, View } from '../components/Themed';
 import Button from "../components/Button";
 import {TextInput} from "react-native-paper";
 import {reserveRealty} from "../api/api";
+import {showModal} from "../redux/reducers/mainSlice";
+import {useAppDispatch} from "../redux/helpers";
 export default function RentScreen({navigation, route}) {
     const [rentedFromDay, setRentedFromDay] = useState(null);
     const [rentedFromMonth, setRentedFromMonth] = useState(null);
@@ -13,7 +15,7 @@ export default function RentScreen({navigation, route}) {
     const [rentedToMonth, setRentedToMonth] = useState(null);
     const [rentedToYear, setRentedToYear] = useState(null);
     const [personCount, setPersonCount] = useState(0);
-
+    const dispatch = useAppDispatch();
     const rentRealty = async () => {
         try {
             const data = {
@@ -25,7 +27,13 @@ export default function RentScreen({navigation, route}) {
             console.log(res.data);
             navigation.navigate('RealtyOffersScreen');
         } catch (e) {
-            console.log(e)
+            if (e.response?.data?.message) {
+                dispatch(showModal(e.response?.data?.message))
+            } else {
+                dispatch(showModal('Something went wrong'))
+            }
+
+            console.log(e.response?.data?.message);
         }
     }
     return (

@@ -10,7 +10,7 @@ import {getActiveReservations, getNotes, getUserActiveReservations} from "../red
 import {Card, Paragraph, Title} from "react-native-paper";
 import Button from "../components/Button";
 import {removeReservation} from "../api/api";
-import {removeUserReservation} from "../redux/reducers/mainSlice";
+import {removeUserReservation, showModal} from "../redux/reducers/mainSlice";
 import {useIsFocused} from "@react-navigation/core";
 
 export default function ListScreen({navigation}) {
@@ -34,7 +34,13 @@ export default function ListScreen({navigation}) {
             await removeReservation(reservationId);
             dispatch(removeUserReservation(reservationId));
         } catch (e) {
-            console.log(e);
+            if (e.response?.data?.message) {
+                dispatch(showModal(e.response?.data?.message))
+            } else {
+                dispatch(showModal('Something went wrong'))
+            }
+
+            console.log(e.response?.data?.message);
         }
         console.log(reservationId);
     }

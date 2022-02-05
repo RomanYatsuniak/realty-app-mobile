@@ -8,13 +8,27 @@ import {useEffect, useState} from "react";
 import {getMyInfo, getUserHistoryOfReservations} from "../api/api";
 import {Avatar, Card, Paragraph, Title} from "react-native-paper";
 import Button from "../components/Button";
+import {showModal} from "../redux/reducers/mainSlice";
+import {useAppDispatch} from "../redux/helpers";
 
 export default function HistoryOfReservationsScreen({navigation}) {
     const [reservationHistory, setReservationHistory] = useState(null);
+    const dispatch = useAppDispatch();
     useEffect(() => {
         (async function getInfo() {
-            const reservations = await getUserHistoryOfReservations();
-            setReservationHistory(reservations.data);
+            try {
+                const reservations = await getUserHistoryOfReservations();
+                setReservationHistory(reservations.data);
+            } catch (e) {
+                if (e.response?.data?.message) {
+                    dispatch(showModal(e.response?.data?.message))
+                } else {
+                    dispatch(showModal('Something went wrong'))
+                }
+
+                console.log(e.response?.data?.message);
+            }
+
         })()
     }, []);
     const onPublicationPress = (id, type) => {

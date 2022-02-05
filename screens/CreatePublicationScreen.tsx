@@ -10,6 +10,8 @@ import { Button as PaperBtn } from 'react-native-paper';
 import {tintColorLight} from "../constants/Colors";
 import {createPublication, register} from "../api/api";
 import DropDown from "react-native-paper-dropdown";
+import {showModal} from "../redux/reducers/mainSlice";
+import {useAppDispatch} from "../redux/helpers";
 export default function TabTwoScreen(props) {
     const [publicationTitle, setPublicationTitle] = useState(null);
     const [description, setDescription] = useState<string>('');
@@ -107,7 +109,13 @@ export default function TabTwoScreen(props) {
                 props.navigation.navigate('RealtyOffersScreen')
             }
         } catch (e) {
-            console.log(e.response.data.message);
+            if (e.response?.data?.message) {
+                dispatch(showModal(e.response?.data?.message))
+            } else {
+                dispatch(showModal('Something went wrong'))
+            }
+
+            console.log(e.response?.data?.message);
         }
     }
 

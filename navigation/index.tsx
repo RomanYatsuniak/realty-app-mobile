@@ -35,6 +35,16 @@ import HistoryOfReservationsScreen from "../screens/HistoryOfReservationsScreen"
 import HistoryOfPurchasesScreen from "../screens/HistoryOfPurchasesScreen";
 import CreateUserReviewScreen from "../screens/CreateUserReviewScreen";
 import CreatePublicationReviewScreen from "../screens/CreatePublicationReviewScreen";
+import MyPublicationsScreen from "../screens/MyPublicationsScreen";
+import UpdatePublicationScreen from "../screens/UpdatePublicationScreen";
+import ActiveReservationsOfMyRealty from "../screens/ActiveReservationsOfMyRealty";
+import StatisticsAsOwnerScreen from "../screens/StatisticsAsOwnerScreen";
+import UpdateUserInfoScreen from "../screens/UpdateUserInfoScreen";
+import GiveInfoToOwnerScreen from "../screens/GiveInfoToOwnerScreen";
+import GiveInfoFromOwnerScreen from "../screens/GetInfoFromOwnerScreen";
+import GetInfoFromOwnerScreen from "../screens/GetInfoFromOwnerScreen";
+import GiveInfoToClientScreen from "../screens/GiveInfoToClientScreen";
+import GetInfoFromClientScreen from "../screens/GetInfoFromClientScreen";
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -71,6 +81,16 @@ function RootNavigator() {
                         <Stack.Screen name="HistoryOfPurchasesScreen" options={{ title: '' }} component={HistoryOfPurchasesScreen} />
                         <Stack.Screen name="CreatePublicationReviewScreen" options={{ title: '' }} component={CreatePublicationReviewScreen} />
                         <Stack.Screen name="CreateUserReviewScreen" options={{ title: '' }} component={CreateUserReviewScreen} />
+                        <Stack.Screen name="MyPublicationsScreen" options={{ title: '' }} component={MyPublicationsScreen} />
+                        <Stack.Screen name="UpdatePublicationScreen" options={{ title: '' }} component={UpdatePublicationScreen} />
+                        <Stack.Screen name="ActiveReservationsOfMyRealty" options={{ title: '' }} component={ActiveReservationsOfMyRealty} />
+                        <Stack.Screen name="StatisticsAsOwnerScreen" options={{ title: '' }} component={StatisticsAsOwnerScreen} />
+                        <Stack.Screen name="UpdateUserInfoScreen" options={{ title: '' }} component={UpdateUserInfoScreen} />
+                        <Stack.Screen name="GiveInfoToOwnerScreen" options={{ title: '' }} component={GiveInfoToOwnerScreen} />
+                        <Stack.Screen name="GetInfoFromOwnerScreen" options={{ title: '' }} component={GetInfoFromOwnerScreen} />
+                        <Stack.Screen name="GiveInfoToClientScreen" options={{ title: '' }} component={GiveInfoToClientScreen} />
+                        <Stack.Screen name="GetInfoFromClientScreen" options={{ title: '' }} component={GetInfoFromClientScreen} />
+
                     </Stack.Group>
                 </>
                  :

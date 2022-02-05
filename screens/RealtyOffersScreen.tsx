@@ -11,14 +11,14 @@ import {Card, Paragraph, Title} from "react-native-paper";
 import emptyPublication from './../assets/images/empty-publication-image.jpg';
 import Button from "../components/Button";
 import {useIsFocused} from "@react-navigation/core";
+import {setPublicationsFromHighToLow, setPublicationsFromLowToHigh, showFilter} from "../redux/reducers/mainSlice";
 
 export default function RealtyOffersScreen({navigation}) {
     const dispatch = useAppDispatch();
-    const {payload: publications} = useAppSelector(state => state.main.publications);
+    const publications = useAppSelector(state => state.main.publications);
     const isFocused = useIsFocused();
     useEffect(() => {
         if (isFocused) {
-            console.log('ggggg')
             dispatch(getRealtiesForSale());
         }
     },[isFocused]);
@@ -40,6 +40,8 @@ export default function RealtyOffersScreen({navigation}) {
 
     }
     const renderItem = ({item}) => {
+        // console.log(item.realty.saleInfo)
+        if (item.realty.saleInfo) return;
         return (
             <Card mode="outlined" style={{marginTop: 20}} onPress={() => onPublicationPress(item.publicationId, item.publicationType)}>
                 <Card.Title title={item.publicationTitle} titleStyle={{fontSize: 30}}/>
@@ -59,10 +61,18 @@ export default function RealtyOffersScreen({navigation}) {
                 <Button style={{flex: 1, marginRight: 10}} title="Sell" onPress={() => {setTypeOfPublication('Sell Publications');dispatch(getRealtiesForSale())}}/>
                 <Button style={{flex: 1}} title="Rent" onPress={() => {setTypeOfPublication('Rent Publications');dispatch(getRealtiesForRent())}}/>
             </View>
+            <View style={styles.typeButtonGroup}>
+                <Button style={{flex: 1, marginRight: 10, backgroundColor: 'purple'}} title="PriceUp" onPress={() => {dispatch(setPublicationsFromLowToHigh())}}/>
+                <Button style={{flex: 1, backgroundColor: 'purple'}} title="PriceDown" onPress={() => {dispatch(setPublicationsFromHighToLow())}}/>
+            </View>
+            <View style={styles.typeButtonGroup}>
+                <Button style={{flex: 1, marginRight: 10, backgroundColor: 'brown'}} title="Filter" onPress={() => {dispatch(showFilter(typeOfPublication))}}/>
+                <Button style={{flex: 1, backgroundColor: 'brown'}} title="Clear Filter" onPress={() => typeOfPublication.includes('Rent') ? dispatch(getRealtiesForRent()) : dispatch(getRealtiesForSale())}/>
+            </View>
             <Text style={styles.typeText}>{typeOfPublication}</Text>
             <View>
                 {publications?.length > 0 ?
-                <FlatList contentContainerStyle={{paddingBottom: 300}} data={publications || {}} keyExtractor={item => item.publicationId} renderItem={renderItem}/>
+                <FlatList contentContainerStyle={{paddingBottom: 500}} data={publications || {}} keyExtractor={item => item.publicationId} renderItem={renderItem}/>
                 : <Text style={styles.noDataContainer}>No data</Text>}
             </View>
         </View>
@@ -72,6 +82,7 @@ export default function RealtyOffersScreen({navigation}) {
 const styles = StyleSheet.create({
     typeButtonGroup: {
         flexDirection: 'row',
+        marginBottom: 20,
     },
     container: {
         paddingHorizontal: 10

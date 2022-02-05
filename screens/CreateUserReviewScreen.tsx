@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
-
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import {useEffect, useState} from "react";
@@ -9,25 +8,32 @@ import {getMyInfo, getUserSellings, leaveUserReview} from "../api/api";
 import {Avatar, TextInput} from "react-native-paper";
 import Button from "../components/Button";
 import DropDown from "react-native-paper-dropdown";
+import {showModal} from "../redux/reducers/mainSlice";
+import {useAppDispatch} from "../redux/helpers";
 
 export default function CreateUserReviewScreen({navigation, route}) {
     const [rating, setRating] = useState('');
     const [description, setDescription] = useState('');
     const [showDropDown, setShowDropDown] = useState(false);
+    const dispatch = useAppDispatch();
     const leaveReview = async () => {
         try {
             const res = await leaveUserReview({userId: route.params.id, rating: Number(rating), description});
             console.log(res.data)
             navigation.navigate('RealtyOffersScreen');
         } catch (e) {
-            console.log(e)
+            if (e.response?.data?.message) {
+                dispatch(showModal(e.response?.data?.message))
+            } else {
+                dispatch(showModal('Something went wrong'))
+            }
+
+            console.log(e.response?.data?.message);
         }
 
     }
     return (
         <View style={styles.container}>
-
-
             <DropDown
                 style={{zIndex: 1000}}
                 label={"Rating"}
